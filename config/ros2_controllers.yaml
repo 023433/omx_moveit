@@ -30,6 +30,7 @@ controller_manager:
 
 arm_controller:
   ros__parameters:
+    joint_state_topic: "/joint_states"
     joints:
       - joint1
       - joint2
