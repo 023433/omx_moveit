@@ -34,6 +34,8 @@ set(CONTROLLER_INCLUDE_DEPENDS
 # find dependencies
 find_package(backward_ros REQUIRED)
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclpy REQUIRED)
 foreach(Dependency IN ITEMS ${HW_IF_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
@@ -62,6 +64,18 @@ ament_target_dependencies(
   ${HW_IF_INCLUDE_DEPENDS}
   ${CONTROLLER_INCLUDE_DEPENDS}
 )
+
+
+# install python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# install python executables
+install(PROGRAMS
+  scripts/object_detection.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
 
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME} PATTERN "setup_assistant.launch" EXCLUDE)
