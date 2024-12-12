@@ -72,6 +72,7 @@ ament_python_install_package(${PROJECT_NAME})
 # install python executables
 install(PROGRAMS
   scripts/object_detection.py
+  scripts/object_detection_aruco.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -82,6 +83,7 @@ install(DIRECTORY launch DESTINATION share/${PROJECT_NAME} PATTERN "setup_assist
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY meshes DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY urdf DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY scripts DESTINATION share/${PROJECT_NAME})
 install(FILES .setup_assistant DESTINATION share/${PROJECT_NAME})
 
 pluginlib_export_plugin_description_file(hardware_interface omx_moveit.xml)
