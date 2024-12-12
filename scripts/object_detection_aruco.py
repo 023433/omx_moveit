@@ -134,7 +134,7 @@ class Object_Detection_Aruco(Node):
   def broadcast_transform_aruco(self, tvec, id):
     t = TransformStamped()
     t.header.stamp = self.get_clock().now().to_msg()
-    t.header.frame_id = 'camera_link'
+    t.header.frame_id = 'camera_color_frame'
     t.child_frame_id = f'target_{id}'
 
     t.transform.translation.x = round(tvec[2][0]/1000, 2)
