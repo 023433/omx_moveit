@@ -33,6 +33,12 @@ arm_controller:
     state_interfaces:
       - position
       - velocity
-# gripper_controller:
-#   ros__parameters:
-#     joint: gripper
+gripper_controller:
+  ros__parameters:
+    joint_state_topic: "/gripper_joint_states"
+    joints: 
+      - gripper
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position

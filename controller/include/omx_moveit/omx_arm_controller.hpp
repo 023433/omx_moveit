@@ -99,12 +99,10 @@ protected:
   std::vector<std::string> command_interface_types_;
   std::vector<std::string> state_interface_types_;
 
-  rclcpp::Subscription<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_command_subscriber_;
   realtime_tools::RealtimeBuffer<std::shared_ptr<trajectory_msgs::msg::JointTrajectory>> traj_msg_external_point_ptr_;
   bool new_msg_ = false;
   rclcpp::Time start_time_;
   std::shared_ptr<trajectory_msgs::msg::JointTrajectory> trajectory_msg_;
-  trajectory_msgs::msg::JointTrajectoryPoint point_interp_;
   
   std::vector<std::reference_wrapper<hardware_interface::LoanedCommandInterface>> joint_position_command_interface_;
   std::vector<std::reference_wrapper<hardware_interface::LoanedCommandInterface>> joint_velocity_command_interface_;

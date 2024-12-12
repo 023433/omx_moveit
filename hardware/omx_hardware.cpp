@@ -30,13 +30,13 @@ CallbackReturn RobotSystem::on_init(const hardware_interface::HardwareInfo & inf
   yaml_file_ = info_.hardware_parameters["yaml_file"];
   interface_ = info_.hardware_parameters["interface"];
 
-  joint_position_.assign(5, 0);
-  joint_velocities_.assign(5, 0);
-  joint_position_command_.assign(5, 0);
-  joint_velocities_command_.assign(5, 0);
+  joint_position_.assign(7, 0);
+  joint_velocities_.assign(7, 0);
+  joint_position_command_.assign(7, 0);
+  joint_velocities_command_.assign(7, 0);
 
-  ft_states_.assign(5, 0);
-  ft_command_.assign(5, 0);
+  ft_states_.assign(7, 0);
+  ft_command_.assign(7, 0);
 
 
   // 하드웨어 인터페이스 출력 (상태 인터페이스)
@@ -176,6 +176,7 @@ return_type RobotSystem::read(const rclcpp::Time & /*time*/, const rclcpp::Durat
 return_type RobotSystem::write(const rclcpp::Time &, const rclcpp::Duration &){
 
   // RCLCPP_INFO(logger_, "write");
+  // RCLCPP_INFO_STREAM(logger_, "Your message: write ");
 
   uint8_t id_array[dynamixel_.size()];
   int32_t dynamixel_position[dynamixel_.size()];
@@ -193,8 +194,9 @@ return_type RobotSystem::write(const rclcpp::Time &, const rclcpp::Duration &){
     id_array[idx] = id;
 
     if(strcmp(dxl.first.c_str(), "gripper") == 0){
+      dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, joint_position_command_[6] * 100.0);
+      idx ++;
       continue;
-      // dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command * 150.0);
     }
     
     dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command);
