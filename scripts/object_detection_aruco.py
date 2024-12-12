@@ -127,15 +127,16 @@ class Object_Detection_Aruco(Node):
 
     for i, marker_id in enumerate(marker_ids):
       _, _, tvec = cv2.solvePnP(self.marker_3d_edges, corners[i], self.intrinsic_mat, self.distortion)
-      self.broadcast_transform_aruco(tvec, marker_id)
-
+      self.broadcast_transform_aruco(tvec, marker_id[0])
 
 
   def broadcast_transform_aruco(self, tvec, id):
+    child_frame_id = f'target_{id}'
+
     t = TransformStamped()
     t.header.stamp = self.get_clock().now().to_msg()
     t.header.frame_id = 'camera_color_frame'
-    t.child_frame_id = f'target_{id}'
+    t.child_frame_id = child_frame_id
 
     t.transform.translation.x = round(tvec[2][0]/1000, 2)
     t.transform.translation.y = -round(tvec[0][0]/1000, 2)
@@ -147,6 +148,16 @@ class Object_Detection_Aruco(Node):
     t.transform.rotation.w = 1.0
 
     self.tf_broadcaster.sendTransform(t)
+
+    try:
+      transform = self.tf_buffer.lookup_transform(
+        target_frame='link1',
+        source_frame=child_frame_id,
+        time=rclpy.time.Time()
+      )
+      print(transform)
+    except Exception as e:
+      self.get_logger().error(f"depth_callback Exception : {e}")
 
 
 

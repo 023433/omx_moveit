@@ -191,12 +191,14 @@ return_type RobotSystem::write(const rclcpp::Time &, const rclcpp::Duration &){
     position_command = joint_position_command_[order];
 
     id_array[idx] = id;
+
+    if(strcmp(dxl.first.c_str(), "gripper") == 0){
+      continue;
+      // dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command * 150.0);
+    }
     
     dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command);
 
-    if(strcmp(dxl.first.c_str(), "gripper") == 0){
-      dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command * 150.0);
-    }
     idx ++;
   }
 

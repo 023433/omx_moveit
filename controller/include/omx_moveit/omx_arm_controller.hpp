@@ -29,7 +29,7 @@
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "trajectory_msgs/msg/joint_trajectory_point.hpp"
 
-namespace omx_moveit
+namespace omx_moveit_arm_controller
 {
 class RobotController : public controller_interface::ControllerInterface
 {
@@ -124,6 +124,6 @@ protected:
       {"velocity", &joint_velocity_state_interface_}};
 };
 
-}  // namespace omx_moveit
+}  // namespace omx_moveit_arm_controller
 
 #endif  // ROS2_CONTROL__OMX_CONTROLLER_HPP_

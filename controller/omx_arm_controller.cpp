@@ -1,5 +1,5 @@
 
-#include "omx_moveit/omx_controller.hpp"
+#include "omx_moveit/omx_arm_controller.hpp"
 
 #include <stddef.h>
 #include <algorithm>
@@ -17,10 +17,10 @@ using config_type = controller_interface::interface_configuration_type;
 using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
 using GoalHandleFollowJointTrajectory = rclcpp_action::ServerGoalHandle<FollowJointTrajectory>;
 
-namespace omx_moveit
+namespace omx_moveit_arm_controller
 {
 
-auto logger_ = rclcpp::get_logger("omx_controller");
+auto logger_ = rclcpp::get_logger("omx_moveit_arm_controller");
 
 RobotController::RobotController() : controller_interface::ControllerInterface() {}
 controller_interface::CallbackReturn RobotController::on_init(){
@@ -202,7 +202,7 @@ controller_interface::return_type RobotController::update(const rclcpp::Time & t
 
     for(size_t i = 0; i < joint_position_command_interface_.size(); i++){
       joint_position_command_interface_[i].get().set_value(trajectory_msg_->points[0].positions[i]);
-      // std::cerr << "trajectory_msg_.positions[i]" << trajectory_msg_->points[0].positions[i] << std::endl;
+      // std::cerr << "trajectory_msg_.joint_names[i]" << i << " : " << trajectory_msg_->joint_names[i] << std::endl;
     }
 
     for(size_t i = 0; i < joint_velocity_command_interface_.size(); i++){
@@ -246,8 +246,8 @@ controller_interface::CallbackReturn RobotController::on_shutdown(const rclcpp_l
   return CallbackReturn::SUCCESS;
 }
 
-}  // namespace omx_moveit
+}  // namespace omx_moveit_arm_controller
 
 #include "pluginlib/class_list_macros.hpp"
 
-PLUGINLIB_EXPORT_CLASS(omx_moveit::RobotController, controller_interface::ControllerInterface)
+PLUGINLIB_EXPORT_CLASS(omx_moveit_arm_controller::RobotController, controller_interface::ControllerInterface)

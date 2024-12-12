@@ -50,7 +50,8 @@ add_library(
   omx_moveit
   SHARED
   hardware/omx_hardware.cpp
-  controller/omx_controller.cpp
+  controller/omx_arm_controller.cpp
+  controller/omx_gripper_controller.cpp
 )
 
 target_compile_features(omx_moveit PUBLIC cxx_std_17)
