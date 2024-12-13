@@ -35,7 +35,7 @@ arm_controller:
       - velocity
 gripper_controller:
   ros__parameters:
-    joint_state_topic: "/gripper_joint_states"
+    joint_state_topic: "/joint_states"
     joints: 
       - gripper
     command_interfaces:

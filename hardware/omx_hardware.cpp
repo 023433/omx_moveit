@@ -175,9 +175,6 @@ return_type RobotSystem::read(const rclcpp::Time & /*time*/, const rclcpp::Durat
 
 return_type RobotSystem::write(const rclcpp::Time &, const rclcpp::Duration &){
 
-  // RCLCPP_INFO(logger_, "write");
-  // RCLCPP_INFO_STREAM(logger_, "Your message: write ");
-
   uint8_t id_array[dynamixel_.size()];
   int32_t dynamixel_position[dynamixel_.size()];
   uint8_t idx = 0;
@@ -190,15 +187,14 @@ return_type RobotSystem::write(const rclcpp::Time &, const rclcpp::Duration &){
     id = (uint8_t)dxl.second;
     order = dynamixel_order_[id];
     position_command = joint_position_command_[order];
-
     id_array[idx] = id;
 
     if(strcmp(dxl.first.c_str(), "gripper") == 0){
-      dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, joint_position_command_[6] * 100.0);
+      dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, -joint_position_command_[6] * 150);
       idx ++;
       continue;
     }
-    
+
     dynamixel_position[idx] = dxl_wb_->convertRadian2Value(id, position_command);
 
     idx ++;

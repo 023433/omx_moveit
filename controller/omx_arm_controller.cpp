@@ -148,13 +148,11 @@ controller_interface::CallbackReturn RobotController::on_activate(const rclcpp_l
 
   // assign command interfaces
   for(auto & interface : command_interfaces_){
-    RCLCPP_INFO(logger_, "on_activate arm command_interfaces_ : %s : %s", interface.get_name().c_str(), interface.get_interface_name().c_str());
     command_interface_map_[interface.get_interface_name()]->push_back(interface);
   }
 
   // assign state interfaces
   for(auto & interface : state_interfaces_){
-    RCLCPP_INFO(logger_, "on_activate arm state_interfaces_ : %s : %s", interface.get_name().c_str(), interface.get_interface_name().c_str());
     state_interface_map_[interface.get_interface_name()]->push_back(interface);
   }
 
@@ -172,7 +170,6 @@ controller_interface::return_type RobotController::update(const rclcpp::Time & t
   }
 
   if(trajectory_msg_ != nullptr){
-    RCLCPP_INFO_STREAM(logger_, "Your message: " );
     for(size_t i = 0; i < joint_position_command_interface_.size(); i++){
       joint_position_command_interface_[i].get().set_value(trajectory_msg_->points[0].positions[i]);
     }
