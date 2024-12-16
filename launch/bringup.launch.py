@@ -69,7 +69,7 @@ def generate_launch_description():
     )
   )
 
-  ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=True))
+  ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=False))
 
   ld.add_action(
     IncludeLaunchDescription(
