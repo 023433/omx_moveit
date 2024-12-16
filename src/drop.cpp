@@ -58,12 +58,15 @@ private:
   bool is_done_ = false;
   bool is_standby_ = true;
   bool is_turn_right_ = true;
+  bool is_drop_ = true;
+  bool is_return_turn_right_ = true;
+  bool is_return_standby = true;
   bool is_moving_ = true;
   int step = 0;
 
 
   void drop_sub_callback(const std_msgs::msg::String msg) {
-
+    (void)msg;
     if(is_moving_){
       return;
     }
@@ -86,10 +89,20 @@ private:
       arm_command_pub_->publish(temp);
       step++;
       return;
-    } 
-    
+    }
+
     if(step == 2){
       if(is_turn_right_){
+        return;
+      }
+      temp.data = "drop";
+      arm_command_pub_->publish(temp);
+      step++;
+      return;
+    }
+
+    if(step == 3){
+      if(is_drop_){
         return;
       }
       temp.data = "open";
@@ -98,11 +111,28 @@ private:
       return;
     }
 
-    if(step == 3){
+    if(step == 4){
+      if(is_return_turn_right_){
+        return;
+      }
+
+      temp.data = "turn_right";
+      arm_command_pub_->publish(temp);
+      step++;
+      return;
+    }
+        
+
+    if(step == 5){
+      if(is_return_standby){
+        return;
+      }
+
       temp.data = "standby";
       arm_command_pub_->publish(temp);
       is_done_ = true;
     }
+
   }
 
   
@@ -120,6 +150,8 @@ private:
       step = 0;
       is_standby_ = true;
       is_turn_right_ = true;
+      is_drop_ = true;
+      is_return_turn_right_ = true;
       is_done_ = false;
       drop_status_pub_->publish(pick_and_place_status);
     }
@@ -137,7 +169,7 @@ private:
 
     rclcpp::Duration elapsed_time = clock_.now() - exe_time_;
     
-    if(elapsed_time.seconds() < 0.5){
+    if(elapsed_time.seconds() < 0.2){
       return;
     }
 
@@ -148,7 +180,6 @@ private:
     }
 
     prev_joint_state_ = msg;
-
 
     if(is_standby_ && step == 1){
       if(is_joint_change){
@@ -163,6 +194,28 @@ private:
       }
       is_turn_right_ = false;
     }
+
+    if(is_drop_ && step == 3){
+      if(is_joint_change){
+        return;
+      }
+      is_drop_ = false;
+    }
+
+    if(is_return_turn_right_ && step == 4){
+      if(is_joint_change){
+        return;
+      }
+      is_return_turn_right_ = false;
+    }
+
+    if(is_return_standby && step == 5){
+      if(is_joint_change){
+        return;
+      }
+      is_return_standby = false;
+    }
+
 
     prev_joint_state_ = msg;
   }

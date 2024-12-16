@@ -49,7 +49,7 @@ public:
 
 
     pickup_timer_ = node_->create_wall_timer(std::chrono::milliseconds(500), std::bind(&PickAndPlace::send_pickup, this));
-    drop_timer_ = node_->create_wall_timer(std::chrono::milliseconds(500), std::bind(&PickAndPlace::send_drop, this));
+    drop_timer_ = node_->create_wall_timer(std::chrono::milliseconds(200), std::bind(&PickAndPlace::send_drop, this));
     pickup_pub_ = node_->create_publisher<geometry_msgs::msg::TransformStamped>("/pickup", 10);
     drop_pub_ = node_->create_publisher<std_msgs::msg::String>("/drop", 10);
     
@@ -205,6 +205,17 @@ private:
       }
 
       size_t index = std::distance(joint_names.begin(), it);
+
+      // RCLCPP_INFO(
+      //   LOGGER, 
+      //   "joint_names %s // %s // %f // %f // %f // %f", 
+      //   joint_names[index].c_str(), 
+      //   current.name[i].c_str(),
+      //   points[index], 
+      //   current.position[i], 
+      //   std::fabs(points[index] - current.position[i]), 
+      //   threshold
+      // );
 
       if (std::fabs(points[index] - current.position[i]) >= threshold) {
         return false;
