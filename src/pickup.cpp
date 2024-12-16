@@ -11,6 +11,8 @@
 #include "realtime_tools/realtime_buffer.h"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include <chrono>
+#include <thread>
 
 namespace pickup
 {
@@ -38,12 +40,20 @@ public:
     );
 
     pickup_status_pub_ = node_->create_publisher<omx_moveit_msgs::msg::PickAndPlaceStatus>("/pickup/status", 10);
+    arm_command_pub_ = node_->create_publisher<std_msgs::msg::String>("/arm/command", 10);
     gripper_command_pub_ = node_->create_publisher<std_msgs::msg::String>("/gripper/command", 10);
     arm_plan_service_client_ = node_->create_client<omx_moveit_msgs::srv::ArmPlan>("/arm/plan");
     arm_execute_service_client_ = node_->create_client<omx_moveit_msgs::srv::ArmPlanExe>("/arm/plan/execute");
 
     pickup_status_timer_ = node_->create_wall_timer(std::chrono::milliseconds(500), std::bind(&Pickup::send_pickup_status, this));
+  }
 
+  void initialize(){
+    RCLCPP_INFO(LOGGER, "Pickup temp");
+    std_msgs::msg::String temp;
+    temp.data = "standby";
+    arm_command_pub_->publish(temp);
+    RCLCPP_INFO(LOGGER, "Pickup temp done");
   }
 
 
@@ -55,6 +65,7 @@ private:
   rclcpp::Subscription<geometry_msgs::msg::TransformStamped>::SharedPtr pickup_sub_;
 
   rclcpp::Publisher<omx_moveit_msgs::msg::PickAndPlaceStatus>::SharedPtr pickup_status_pub_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr arm_command_pub_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr gripper_command_pub_;
   rclcpp::Client<omx_moveit_msgs::srv::ArmPlan>::SharedPtr arm_plan_service_client_;
   rclcpp::Client<omx_moveit_msgs::srv::ArmPlanExe>::SharedPtr arm_execute_service_client_;
@@ -74,6 +85,7 @@ private:
   rclcpp::Clock clock_;
   rclcpp::Time plan_time_ = clock_.now();
 
+  bool is_initialize_ = false;
   bool is_arm_runing_ = false;
   bool is_arm_plan_runing_ = false;
   bool is_arm_plan_done_ = false;
@@ -303,6 +315,9 @@ int main(int argc, char **argv) {
   auto node = rclcpp::Node::make_shared("pickup", node_options);
 
   pickup::Pickup pickup(node);
+
+  std::this_thread::sleep_for(std::chrono::seconds(3));
+  pickup.initialize();
 
   rclcpp::spin(node);
 

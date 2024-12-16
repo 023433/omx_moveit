@@ -79,7 +79,7 @@ private:
     geometry_msgs::msg::Pose target_pose;
     target_pose.position.x = translation.x;
     target_pose.position.y = translation.y;
-    target_pose.position.z = translation.z + 0.02;
+    target_pose.position.z = translation.z;
     target_pose.orientation.x = rotation.x;
     target_pose.orientation.y = rotation.y;
     target_pose.orientation.z = rotation.z;
